@@ -21,6 +21,8 @@ def main():
                         help="List of floats as a string in the format '[1, 2, 3, ...]'")
     parser.add_argument("--cutoff", type=int, required=False, default=1000,
                         help="A cutoff for the database. We only consider first 'cutoff' many tuples")
+    parser.add_argument("--notqdm", action="store_true", default=False,
+                        help="Flag to disable tqdm (default: False)")
 
 
     # Parse arguments
@@ -32,6 +34,7 @@ def main():
     utility_function_str = args.utility_function
     negative_attributes_str = args.negative_attributes
     cutoff = args.cutoff
+    notqdm_flag = args.notqdm
 
 
     datadir = './real-life-datasets/'
@@ -74,7 +77,7 @@ def main():
 
     print("Utility Function: ", utility)
     oracle = Oracle(utility)
-    inventum = Inventum(df,oracle,epsilon, criterion, negative_attributes)
+    inventum = Inventum(df,oracle,epsilon, criterion, negative_attributes, notqdm_flag)
     inventum.search()
     
 

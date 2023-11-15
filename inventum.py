@@ -11,7 +11,7 @@ DIFF_THRESHOLD_FACTOR = 0.1
 DELTA = 0.000001
 
 class Inventum:
-    def __init__(self, data_frame, oracle: Oracle, eps = 0.1, criterion="LP", negative_attributes = []):
+    def __init__(self, data_frame, oracle: Oracle, eps = 0.1, criterion="LP", negative_attributes = [], notqdm_flag = False):
         """
         Initialize the Inventum class with a pandas DataFrame and an Oracle instance.
 
@@ -41,6 +41,7 @@ class Inventum:
         self.eps = eps
         self.criterion = criterion
         self.negative_attributes = negative_attributes
+        self.notqdm_flag = notqdm_flag
 
         # self.or_variables = dict()
         # self.solver = pywraplp.Solver.CreateSolver("GLOP")
@@ -58,7 +59,7 @@ class Inventum:
         """
         # We treat each row as a function
         max_func = self.data_frame.iloc[self.max_row_ind].tolist()
-        for idx, func in tqdm(self.data_frame.iterrows(), total=len(self.data_frame), desc="Processing Rows"):
+        for idx, func in tqdm(self.data_frame.iterrows(), total=len(self.data_frame), desc="Processing Rows", disable=self.notqdm_flag):
             if idx == 0:
                 continue
             curr_func = func.tolist()
@@ -94,7 +95,7 @@ class Inventum:
         print("Number of Queries: ", self.oracle.counter)
         print("Favorite Tuple Index:", self.max_row_ind)
         print("Favorite Tuple:", self.data_frame.iloc[self.max_row_ind])
-        print("Favorite Tuple Utilify:", self.oracle._get_exact_utility(max_func))
+        print("Favorite Tuple Utility:", self.oracle._get_exact_utility(max_func))
 
     def decideQuery(self, curr_func, curr_idx, criterion = "LP"):
         """
