@@ -74,11 +74,11 @@ class Inventum:
                 # curr_func intersects with max_fun 
                 oracle_result = self.oracle.query(max_func, curr_func)
                 if oracle_result == 0:
-                    # the user still prefers the current max_func, hence the feasible region shrinks to points where max_func >= curr_func + DELTA
+                    # the user still prefers the current max_func, hence the feasible region shrinks to points where max_func > curr_func
                     if self.criterion == "LP":
                         self.constraints.append(Constraint(subtract(max_func, curr_func), DELTA, None))
                 elif oracle_result == 1:
-                    # the user prefers the curr_func over max_func. Feasible region shrinks to points where curr_func >= max_func
+                    # the user prefers the curr_func over max_func. Feasible region shrinks to points where curr_func > max_func
                     max_func = curr_func
                     self.max_row_ind = idx
                     if self.criterion == "LP":
